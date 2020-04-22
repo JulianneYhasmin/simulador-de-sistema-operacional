@@ -4,6 +4,7 @@
 #include <iostream>
 #include "Processo.h"
 #include "Kernel.h"
+#include "CPU.h"
 
 using namespace std;
 // Cria o processo de forma randomica, recebendo apenas o id
@@ -12,36 +13,61 @@ using namespace std;
     return t;
 }*/
 
+class Simulador {
+
+private:
+    int quantum; // em segundos, dentro do escalonador ou kernel eu preciso ajustar o tempo
+    int numero_cores;
+    int quantidade_processos;
+    int escalonador;
+    Kernel* k = new Kernel();
+public:   
+
+  
+    void menu() {
+        cout << "Selecione o tipo de escalonador: " << endl;
+        cout << "1 -FIFO " << endl;
+        cout << "2 -SJF " << endl;
+        cout << "3 -RR " << endl;
+        cin >> escalonador;
+        
+        /**/
+        cout << "Digite a quantidade de Processos: " << endl;
+        cin >> quantidade_processos;
+        if (20 < quantidade_processos || quantidade_processos < 2) {
+            cout << "VALOR INVALIDO TENTE UM NUMERO ENTRE 2 E 20." << endl;
+           
+        }
+       
+        cout << "Digite a quantidade de CORES: " << endl;
+        cin >> numero_cores;
+        if (64 < numero_cores || numero_cores < 1) {
+            cout << "VALOR INVALIDO TENTE UM NUMERO ENTRE 1 E 64." << endl;
+           
+        }
+        k = new Kernel(numero_cores, quantidade_processos, escalonador);
+        k->criadorDeProcessos();
+        k->imprimeTabelaProcessos();
+
+   }
+    Simulador() {
+        quantum = 2 + rand() % 18; // em segundos, dentro do escalonador ou kernel eu preciso ajustar o tempo
+        numero_cores = 0;
+        quantidade_processos = 0;
+        escalonador = 0;
+        k = new Kernel();
+    }
+
+    ~Simulador() {
+       // free(k);
+    }
+};
+
 int main()
 {
-    Kernel* k = new Kernel();
-    int quantum = 5; // em segundos, dentro do escalonador ou kernel eu preciso ajustar o tempo
-    int numero_cores = 3;
-    int quantidade_processos = 1;
-    int escalonador;
-    cout << "Selecione o tipo de escalonador: "<< endl;
-    cout << "1 -FIFO " << endl;
-    cout << "1 -SJF " << endl;
-    cout << "3 -RR " << endl;
-    cin >> escalonador;
+    Simulador* s = new Simulador();
     // Criador de processos randomicos
-
-    Processo *p = new Processo(1,2,"Ready");
-    k->criadorDeProcessos(p);
-    Processo **cores;
-    cores = new Processo * [numero_cores];
-    for (int i = 0; i < numero_cores; i++) {
-        cores[i] = p;
-    }
-    cout << "Imprimindo Processo";
-    for (int i = 0; i < numero_cores; i++) {
-        cout << " ====================================== " << endl;
-        cout << cores[i]->getId() << endl;
-        cout << cores[i]->getEstado() << endl;
-        cout << cores[i]->getTempoRestante() << endl;
-        cout << cores[i]->getTempoTotal() << endl;
-
-    }
+    s->menu();
     return 0;
 }
 

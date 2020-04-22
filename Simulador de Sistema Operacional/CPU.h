@@ -6,10 +6,18 @@ using namespace std;
 class CPU
 {
 private:
-	Processo **cores;
+	
 public:
+//	list<Processo>* cores;
+
+/*	CPU() {
+
+	}
+*/
+	Processo** cores;
 	CPU(int tamanho) {
 		cores = new Processo*[tamanho];
 	}
+	
 };
 

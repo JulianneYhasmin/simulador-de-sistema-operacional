@@ -152,12 +152,14 @@
     <ClCompile Include="Kernel.cpp" />
     <ClCompile Include="Processo.cpp" />
     <ClCompile Include="Simulador de Sistema Operacional.cpp" />
+    <ClCompile Include="Simulador.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CPU.h" />
     <ClInclude Include="Escalonador.h" />
     <ClInclude Include="Kernel.h" />
     <ClInclude Include="Processo.h" />
+    <ClInclude Include="Simulador.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,7 +1,7 @@
 #pragma once
 #include <string.h>
 #include <string>
-
+#include <iostream>
 using namespace std;
 
 class Processo
@@ -17,6 +17,15 @@ public:
 		tempoTotal = tempoTot;
 		tempoRestante = tempoTot;
 		this->estado = estado;
+	}
+	Processo() {
+		this->id = 0;
+		tempoTotal = 0;
+		tempoRestante = 0;
+		this->estado = "";
+	}
+	void imprimeValor() {
+		cout << "[ " << id << ", " << tempoTotal << ", " << estado<< ", " << tempoRestante << " ]";
 	}
 	void setId(int id) {
 		this->id = id;
