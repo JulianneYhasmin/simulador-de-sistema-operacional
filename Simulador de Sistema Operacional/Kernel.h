@@ -13,33 +13,45 @@ private:
 	list <Processo> process_control_table;
 	Escalonador* escalonador;
 	int tipoEscalonador;
+	int numeroCores;
 	
 	//Escalonador* escalonador;
 public:
-	Kernel(int numero_cores, int quantidade_processos, int tipoEscalonador ) {
-		this->cpu = new CPU(numero_cores);
+	Kernel(int numero_cores, int quantidade_processos, int tipoEscalonador, int quantum) {
+		this->cpu = new CPU();
 		this->quantidade_processos = quantidade_processos;
-		escalonador = new Escalonador();
+		escalonador = new Escalonador(quantum);
 		this->tipoEscalonador = tipoEscalonador;
+		numeroCores = numero_cores;
+		
+	}
+	Kernel(int quantum) {
+		this->cpu = new CPU();
+		this->quantidade_processos = 0;
+		process_control_table = list<Processo>();
+		escalonador = new Escalonador(quantum);
+		quantidade_processos = 0;
+		tipoEscalonador = 0;
 	}
 	Kernel() {
-		this->cpu = new CPU(0);
+		this->cpu = new CPU();
 		this->quantidade_processos = 0;
-		escalonador = new Escalonador();
+		escalonador = new Escalonador(0);
+		quantidade_processos = 0;
+		tipoEscalonador = 0;
 	}
 	
 	void run() {	
-		while (true) {
 			Sleep(1000);
-			escalonador = new Escalonador(process_control_table,tipoEscalonador, cpu);
+			escalonador = new Escalonador(process_control_table,tipoEscalonador, cpu,numeroCores);
+			escalonador->run();
 
-		}	
 	
 	}
 	void criadorDeProcessos() {
 		int i = 0;
+		Processo* p = new Processo();
 		while (i < quantidade_processos) {
-			Processo* p = new Processo();
 			p = gerarProcessoRandomico(i);
 			process_control_table.push_back(*p);
 			i++;
