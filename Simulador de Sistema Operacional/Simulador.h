@@ -46,6 +46,7 @@ public:
         k->run();
         //thread runKernel(Escalonador::run);
         //runKernel.join();
+        k->kill_process();
     }
     Simulador() {
         quantum = 2 + rand() % 18; // em segundos, dentro do escalonador ou kernel eu preciso ajustar o tempo

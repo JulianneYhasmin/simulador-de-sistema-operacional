@@ -18,11 +18,21 @@ public:
 		tempoRestante = tempoTot;
 		this->estado = estado;
 	}
+	Processo(int id, int tempoTot,int tempoRest, string estado) {
+		this->id = id;
+		tempoTotal = tempoTot;
+		tempoRestante = tempoRest;
+		this->estado = estado;
+	}
 	Processo() {
 		this->id = 0;
 		tempoTotal = 0;
 		tempoRestante = 0;
 		this->estado = "";
+	}
+	inline bool operator==(const Processo& outro) const
+	{
+		return outro.id == this->id;
 	}
 	void imprimeValor() {
 		cout << "[ " << id << ", " << tempoTotal << ", " << estado<< ", " << tempoRestante << " ]";
@@ -45,7 +55,7 @@ public:
 	int getTempoRestante() {
 		return tempoRestante;
 	}
-	void setEstado(int estado) {
+	void setEstado(string estado) {
 		this->estado = estado;
 	}
 	string getEstado() {

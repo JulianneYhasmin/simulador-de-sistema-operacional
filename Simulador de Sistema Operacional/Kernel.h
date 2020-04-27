@@ -45,7 +45,7 @@ public:
 			Sleep(1000);
 			escalonador = new Escalonador(process_control_table,tipoEscalonador, cpu,numeroCores);
 			escalonador->run();
-
+			
 	
 	}
 	void criadorDeProcessos() {
@@ -56,9 +56,11 @@ public:
 			process_control_table.push_back(*p);
 			i++;
 		}
+		delete(p);
 	}
 
 	void imprimeTabelaProcessos() {
+		cout << "---------------------- TABELA DE PROCESSOS -----------------------------" << endl;
 		for (list<Processo>::iterator it = process_control_table.begin(); it != process_control_table.end(); it++) {
 			(it)->imprimeValor();
 		}
@@ -72,8 +74,8 @@ public:
 		return randomico;
 	}
 	void kill_process() {
-
-
+		process_control_table.clear();
+		delete(escalonador);
 	}
 
 
