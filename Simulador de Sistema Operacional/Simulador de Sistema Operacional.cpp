@@ -1,6 +1,4 @@
 // Simulador de Sistema Operacional.cpp : Este arquivo contém a função 'main'. A execução do programa começa e termina ali.
-//
-
 #include <iostream>
 #include "Processo.h"
 #include "Kernel.h"
@@ -8,8 +6,6 @@
 #include "Simulador.h"
 
 using namespace std;
-
-
 int main()
 {
     Simulador* s = new Simulador();

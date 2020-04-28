@@ -45,11 +45,9 @@ public:
 	}
 	
 	void run() {	
-			Sleep(1000);
+			//Sleep(1000);
 			escalonador = new Escalonador(process_control_table,tipoEscalonador, cpu,numeroCores, quantum);
-			escalonador->run();
-			
-	
+			escalonador->run();	
 	}
 	void criadorDeProcessos() {
 		int i = 0;

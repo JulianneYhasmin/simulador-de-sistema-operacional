@@ -39,7 +39,7 @@ public:
 
 	Escalonador(list <Processo> tabelaProcessos, int tipoEsc, CPU *cores,int numeroCores,int quantum) {
 		this->cpu = cores;
-		inserirProcesso(tabelaProcessos,0);
+		inserirProcesso(tabelaProcessos);
 		this->tipoEscalonador = tipoEsc;
 		this->numeroCores = numeroCores;
 		this->quantum = quantum;
@@ -55,22 +55,15 @@ public:
 
 
 
-	void inserirProcesso(list <Processo> lista, int listaLocal) {
+	void inserirProcesso(list <Processo> lista) {
 		list<Processo>::iterator it = lista.begin();
 		Processo *p = new Processo();
-		if (listaLocal == 0) {
 			//cout << "\n--------------APTOS ---------------------- " << endl;
 			while (it != lista.end()) {
 				p = new Processo((it)->getId(), (it)->getTempoTotal(), (it)->getEstado());
-
-				//p->imprimeValor();
 				prontos.push_back(*p);
 				it++;
-			}
-		}
-		
-		
-		
+			}		
 	}
 	//Metodo usado para escalonar um processo e iniciar sua execução num core de processamento
 	void schedule_process(Processo *p) {
@@ -99,11 +92,9 @@ public:
 	//	escalonador.join();
 		cout << "\n-------------------- FILA DE APTOS DO ESCALONADOR ----------------------" << endl;
 		imprimeListas(prontos);
-		cout << "\n QUANTUM: " << quantum <<endl;
 		escalonadorDeProcessos();
 		cout << "\n-------------------- FILA DE FINALIZADOS DO ESCALONADOR ----------------------" << endl;
 		imprimeListas(finalizados);
-		
 		
 	}
 	void imprimeListas(list<Processo> lista) {
@@ -115,23 +106,23 @@ public:
 		
 	}
 
-	void insereFIFO_RR(list<Processo> lista) {
+	void insereFIFO_RR(list<Processo> lista) {//Retira da lista de prontos e coloca na lista de cores
 		cout << "\n----------------------------------------------------------------- " << endl;
-		int i = cpu->cores.size();
+		int tamanhoListaCores = cpu->cores.size();
 		list<Processo>::iterator it = lista.begin();
 		Processo* p = new Processo();
 		int numTemporarioCores = numeroCores;
-		while (i != numTemporarioCores) {
+		while (tamanhoListaCores != numTemporarioCores) {
 			if (lista.size()<numeroCores) {
 				numTemporarioCores = prontos.size();
 			}
 			p = new Processo((it)->getId(), (it)->getTempoTotal(),(it)->getTempoRestante(), "Rodando");
-			// p->imprimeValor();
-			cpu->cores.push_back(*p);
-			prontos.pop_front();
+			cpu->cores.push_back(*p);// Insere nos meus cores
+			prontos.pop_front();//Remove o primeiro elemento da minha lista de prontos
 			it++;
-			i++;
+			tamanhoListaCores++;
 		}
+		delete(p);
 	}
 	Processo* execucaoCORES(Processo *core) {
 		int tempoRestante = core->getTempoRestante();
@@ -155,9 +146,9 @@ public:
 				core->setEstado("Finalizado");
 				finalizados.push_back(*core);
 				rodando->cores.pop_back();				
-				if (prontos.size()>0) {				
+				if (prontos.size()>0) {	//			
 				list<Processo>::iterator it2 = prontos.begin();
-				Processo* core2 = new Processo((it2)->getId(), (it2)->getTempoTotal(),"Rodando");
+				Processo* core2 = new Processo((it2)->getId(), (it2)->getTempoTotal(), (it2)->getTempoTotal(),"Rodando");
 				rodando->cores.push_back(*core2);
 				prontos.pop_front();
 				delete(core2);
@@ -176,8 +167,6 @@ public:
 		list<Processo>::iterator it = cpu->cores.begin();
 		CPU* rodando = new CPU();
 		Processo* core;
-		//Processo* pront;
-		//Processo* core2;
 		if (tempo == 0) {
 			for (it = cpu->cores.begin(); it != cpu->cores.end(); it = cpu->cores.begin()) {				
 				core = new Processo((it)->getId(), (it)->getTempoTotal(), (it)->getTempoRestante(), "Pronto");
@@ -202,15 +191,11 @@ public:
 					Processo* core2 = new Processo((it2)->getId(), (it2)->getTempoTotal(), (it2)->getTempoRestante(), "Rodando");
 					rodando->cores.push_back(*core2);
 					prontos.pop_front();
-					//cout << "\n====================== FINALIZADOS ====================" << endl;
-					//imprimeListas(finalizados);
 					delete(core2);
 				}
 			}
 
-			delete(core);
-			// atualiza os  cores
-			
+			delete(core);			
 		}
 		cpu->cores = rodando->cores;		
 		}
@@ -220,16 +205,10 @@ public:
 		insereFIFO_RR(prontos);
 		int tempo = 0;
 		int cont = 0;
-		/*T0
-			CORES : [P1, 12, 2] , [P2, 5, 1], [P3, 6, 4]
-			FILA : [P4, 12, 12] , [P5, 11, 11], [P6, 14, 14], [P7, 22, 22], [P8, 19, 15], ...
-			TERMINADOS : []
-			*/
-
 		while (cpu->cores.size() > 0) {
 			// Esse metodo faz a inclusão e exclusão durante o periodo da execução
 			tempo = quantum;
-			cout << "\nT" << cont <<  endl;
+			cout << "\n --- " << cont <<" ---" << endl;
 			cont++;
 			while (tempo >= 0)
 			{
