@@ -30,12 +30,12 @@ public:
 		tempoRestante = 0;
 		this->estado = "";
 	}
-	inline bool operator==(const Processo& outro) const
+	bool operator==(const Processo *outro) const
 	{
-		return outro.id == this->id;
+		return outro->id == this->id;
 	}
 	void imprimeValor() {
-		cout << "[ " << id << ", " << tempoTotal << ", " << estado<< ", " << tempoRestante << " ]";
+		cout << "[ " << id << ", " << estado  << ", " << tempoTotal << ", " << tempoRestante << " ]";
 	}
 	void setId(int id) {
 		this->id = id;

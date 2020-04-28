@@ -14,6 +14,7 @@ private:
 	Escalonador* escalonador;
 	int tipoEscalonador;
 	int numeroCores;
+	int quantum;
 	
 	//Escalonador* escalonador;
 public:
@@ -23,6 +24,7 @@ public:
 		escalonador = new Escalonador(quantum);
 		this->tipoEscalonador = tipoEscalonador;
 		numeroCores = numero_cores;
+		this->quantum = quantum;
 		
 	}
 	Kernel(int quantum) {
@@ -39,11 +41,12 @@ public:
 		escalonador = new Escalonador(0);
 		quantidade_processos = 0;
 		tipoEscalonador = 0;
+		numeroCores = 0;
 	}
 	
 	void run() {	
 			Sleep(1000);
-			escalonador = new Escalonador(process_control_table,tipoEscalonador, cpu,numeroCores);
+			escalonador = new Escalonador(process_control_table,tipoEscalonador, cpu,numeroCores, quantum);
 			escalonador->run();
 			
 	
