@@ -13,11 +13,6 @@ public:
 CPU() {
 	cores=list<Processo>();
 	}
-/*
-	Processo** cores;
-	CPU(int tamanho) {
-		cores = new Processo*[tamanho];
-	}
-	*/
+
 };
 

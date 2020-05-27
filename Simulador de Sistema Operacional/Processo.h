@@ -7,59 +7,59 @@ using namespace std;
 class Processo
 {
 private:
-	int id;
-	int tempoTotal; // em segundos
-	int tempoRestante; // em segundos
-	string estado;
+	int process_id;
+	int total_time; // em segundos
+	int remaining_time; // em segundos
+	string state; 
 public:
 	Processo(int id, int tempoTot, string estado) {
-		this->id = id;
-		tempoTotal = tempoTot;
-		tempoRestante = tempoTot;
-		this->estado = estado;
+		this->process_id = id;
+		total_time = tempoTot;
+		remaining_time = tempoTot;
+		this->state = estado;
 	}
 	Processo(int id, int tempoTot,int tempoRest, string estado) {
-		this->id = id;
-		tempoTotal = tempoTot;
-		tempoRestante = tempoRest;
-		this->estado = estado;
+		this->process_id = id;
+		total_time = tempoTot;
+		remaining_time = tempoRest;
+		this->state = estado;
 	}
 	Processo() {
-		this->id = 0;
-		tempoTotal = 0;
-		tempoRestante = 0;
-		this->estado = "";
+		this->process_id = 0;
+		total_time = 0;
+		remaining_time = 0;
+		this->state = "";
 	}
 	bool operator==(const Processo *outro) const
 	{
-		return outro->id == this->id;
+		return outro->process_id == this->process_id;
 	}
 	void imprimeValor() {
-		cout << "[ " << id << ", " << estado  << ", " << tempoTotal << ", " << tempoRestante << " ]";
+		cout << "[ " << process_id << ", " << state << ", " << total_time << ", " << remaining_time << " ]";
 	}
 	void setId(int id) {
-		this->id = id;
+		this->process_id = id;
 	}
 	int getId() {
-		return id;
+		return process_id;
 	}
 	void setTempoTotal(int tempoTotal) {
-		this->tempoTotal = tempoTotal;
+		this->total_time = tempoTotal;
 	}
 	int getTempoTotal() {
-		return tempoTotal;
+		return total_time;
 	}
 	void setTempoRestante(int tempoRestante) {
-		this->tempoRestante = tempoRestante;
+		this->remaining_time = tempoRestante;
 	}
 	int getTempoRestante() {
-		return tempoRestante;
+		return remaining_time;
 	}
 	void setEstado(string estado) {
-		this->estado = estado;
+		this->state = estado;
 	}
 	string getEstado() {
-		return estado;
+		return state;
 	}
 
 };

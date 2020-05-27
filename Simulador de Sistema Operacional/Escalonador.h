@@ -21,31 +21,27 @@ void decrementa(int tempo)
 }
 */
 
-class Escalonador
+class Scheduler
 {
 private:
 	list <Processo> finalizados;
-	list <Processo> prontos;
+	list <Processo> ready_queue; // fila de aptos
 	int tipoEscalonador;
 	CPU *cpu;
 	int quantum;
 	int numeroCores;
-	//CPU *cores; // quantidade de cores definido no simulador
-				// pense em uma forma de criar uma lista desse tamanho aqui
 
 public:
 	
-	//thread decrementa(decrementa,prontos ,1);
-
-	Escalonador(list <Processo> tabelaProcessos, int tipoEsc, CPU *cores,int numeroCores,int quantum) {
+	Scheduler(list <Processo> tabelaProcessos, int tipoEsc, CPU *cores,int numeroCores,int quantum) {
 		this->cpu = cores;
-		inserirProcesso(tabelaProcessos);
+		insert_process(tabelaProcessos);
 		this->tipoEscalonador = tipoEsc;
 		this->numeroCores = numeroCores;
 		this->quantum = quantum;
 	}
-	Escalonador(int quantum) {
-		prontos = list<Processo>();
+	Scheduler(int quantum) {
+		ready_queue = list<Processo>();
 		this->cpu = new CPU();
 		finalizados = list<Processo>();
 		this->tipoEscalonador = 0;
@@ -55,28 +51,20 @@ public:
 
 
 
-	void inserirProcesso(list <Processo> lista) {
+	void insert_process(list <Processo> lista) {
 		list<Processo>::iterator it = lista.begin();
 		Processo *p = new Processo();
 			//cout << "\n--------------APTOS ---------------------- " << endl;
 			while (it != lista.end()) {
 				p = new Processo((it)->getId(), (it)->getTempoTotal(), (it)->getEstado());
-				prontos.push_back(*p);
+				ready_queue.push_back(*p);
 				it++;
 			}		
 	}
-	//Metodo usado para escalonar um processo e iniciar sua execução num core de processamento
-	void schedule_process(Processo *p) {
-		cpu->cores.push_back(*p);
-		//thread decrementa(&decrementa, cores->cores.begin()->getTempoTotal());
-		//decrementa.join();
+	
 
-	}
-	void setAlgoritimoEscalonador(int algoritimo) {
-	//	tipoEscalonador = algoritimo;
-	}
 	//seleciona o escalonador de processos de acordo com o tipo
-	void escalonadorDeProcessos() {
+	void set_scheduling_algorithm() {
 		if (tipoEscalonador == 1) {
 			FIFO();
 		}
@@ -91,8 +79,8 @@ public:
 	//	thread escalonador(escalonadorDeProcessos);
 	//	escalonador.join();
 		cout << "\n-------------------- FILA DE APTOS DO ESCALONADOR ----------------------" << endl;
-		imprimeListas(prontos);
-		escalonadorDeProcessos();
+		imprimeListas(ready_queue);
+		set_scheduling_algorithm();
 		cout << "\n-------------------- FILA DE FINALIZADOS DO ESCALONADOR ----------------------" << endl;
 		imprimeListas(finalizados);
 		
@@ -106,20 +94,23 @@ public:
 		
 	}
 
+	//Metodo usado para escalonar um processo e iniciar sua execução num core de processamento
 	void insereFIFO_RR(list<Processo> lista) {//Retira da lista de prontos e coloca na lista de cores
-		cout << "\n----------------------------------------------------------------- " << endl;
+		cout << "\n------------------------------TESTE----------------------------------- " << endl;
 		int tamanhoListaCores = cpu->cores.size();
 		list<Processo>::iterator it = lista.begin();
 		Processo* p = new Processo();
 		int numTemporarioCores = numeroCores;
+		
+		if (lista.size()<numeroCores) {
+			numTemporarioCores = ready_queue.size();
+		}
+		
 		while (tamanhoListaCores != numTemporarioCores) {
-			if (lista.size()<numeroCores) {
-				numTemporarioCores = prontos.size();
-			}
 			p = new Processo((it)->getId(), (it)->getTempoTotal(),(it)->getTempoRestante(), "Rodando");
 			cpu->cores.push_back(*p);// Insere nos meus cores
-			prontos.pop_front();//Remove o primeiro elemento da minha lista de prontos
 			it++;
+			ready_queue.pop_front();//Remove o primeiro elemento da minha lista de prontos
 			tamanhoListaCores++;
 		}
 		delete(p);
@@ -129,9 +120,27 @@ public:
 		core->setTempoRestante(tempoRestante-1);
 		return core;
 	}
-	list<Processo> removeFIFO(list <Processo> lista) {
-		list<Processo>::iterator it = cpu->cores.begin();
+
+	CPU* deschedule_process(Processo *core, CPU* rodando) { // REMOVE FIFO e RR
+		//list<Processo>::iterator it = cpu->cores.begin();
+		if (core->getTempoRestante() == 0) {
+			// Atualizando os dados do core terminado
+			//core->setTempoRestante(0);
+			core->setEstado("Finalizado");
+			finalizados.push_back(*core);
+			rodando->cores.pop_back();
+			if (ready_queue.size() > 0) {	//			
+				list<Processo>::iterator it2 = ready_queue.begin();
+				Processo* core2 = new Processo((it2)->getId(), (it2)->getTempoTotal(), (it2)->getTempoTotal(), "Rodando");
+				rodando->cores.push_back(*core2);
+				ready_queue.pop_front();
+				delete(core2);
+			}
+			return rodando;
+		}
+		return rodando;
 	}
+
 	void executaFIFO() {
 		list<Processo>::iterator it = cpu->cores.begin();
 		CPU* rodando = new CPU();
@@ -140,22 +149,8 @@ public:
 			core = new Processo((it)->getId(), (it)->getTempoTotal(), (it)->getTempoRestante(), "Rodando");
 			core = execucaoCORES(core);// executa 1 segundo
 			rodando->cores.push_back(*core);
-			if (core->getTempoRestante() == 0) {
-				// Atualizando os dados do core terminado
-				//core->setTempoRestante(0);
-				core->setEstado("Finalizado");
-				finalizados.push_back(*core);
-				rodando->cores.pop_back();				
-				if (prontos.size()>0) {	//			
-				list<Processo>::iterator it2 = prontos.begin();
-				Processo* core2 = new Processo((it2)->getId(), (it2)->getTempoTotal(), (it2)->getTempoTotal(),"Rodando");
-				rodando->cores.push_back(*core2);
-				prontos.pop_front();
-				delete(core2);
-				}
-	
-			}
-
+			deschedule_process(core, rodando);
+			
 			delete(core);
 		}
 		// atualiza os  cores
@@ -163,6 +158,7 @@ public:
 		delete(rodando);
 		
 	}
+
 	void executaRR(int tempo) {
 		list<Processo>::iterator it = cpu->cores.begin();
 		CPU* rodando = new CPU();
@@ -170,7 +166,7 @@ public:
 		if (tempo == 0) {
 			for (it = cpu->cores.begin(); it != cpu->cores.end(); it = cpu->cores.begin()) {				
 				core = new Processo((it)->getId(), (it)->getTempoTotal(), (it)->getTempoRestante(), "Pronto");
-				prontos.push_back(*core);
+				ready_queue.push_back(*core);
 				cpu->cores.pop_front();
 			}
 		}
@@ -181,47 +177,60 @@ public:
 			core = execucaoCORES(core);
 			rodando->cores.push_back(*core);
 			// se o processo terminou
-			if (core->getTempoRestante() == 0) {
-				core->setTempoRestante(0);
-				core->setEstado("Finalizado");
-				finalizados.push_back(*core);
-				rodando->cores.pop_back();
-				if (prontos.size() > 0) {
-					list<Processo>::iterator it2 = prontos.begin();
-					Processo* core2 = new Processo((it2)->getId(), (it2)->getTempoTotal(), (it2)->getTempoRestante(), "Rodando");
-					rodando->cores.push_back(*core2);
-					prontos.pop_front();
-					delete(core2);
-				}
-			}
-
+			rodando = deschedule_process(core, rodando);
 			delete(core);			
 		}
 		cpu->cores = rodando->cores;		
 		}
 		delete(rodando);
 	}
-	void escalonaRR() {
-		insereFIFO_RR(prontos);
+
+	// Primeiro que entra é o primeiro que sai
+	void FIFO() {
+		insereFIFO_RR(ready_queue);
+		int cont = 0;
+		while (cpu->cores.size() > 0) {
+			cout << "\nT" << cont << endl;
+			cont++;
+			// Esse metodo faz a inclusão e exclusão durante o periodo da execução
+			executaFIFO();
+			Sleep(1000);
+			cout << "\nFILA DE APTOS: ";
+			imprimeListas(ready_queue);
+			cout << endl << endl;
+			cout << "CORES: ";
+			imprimeListas(cpu->cores);
+			cout << endl << endl;
+			cout << "FINALIZADOS: ";
+			imprimeListas(finalizados);
+			cout << endl << endl;
+
+		}
+	}
+
+	void RoundRobin() {
+		insereFIFO_RR(ready_queue);
 		int tempo = 0;
 		int cont = 0;
 		while (cpu->cores.size() > 0) {
 			// Esse metodo faz a inclusão e exclusão durante o periodo da execução
 			tempo = quantum;
-			cout << "\n --- " << cont <<" ---" << endl;
+			cout << "\n --- " << cont << " ---" << endl;
 			cont++;
-			while (tempo >= 0)
+			while (tempo >= 0 && cpu->cores.size()>0)
 			{
 				executaRR(tempo);
 				if (tempo == 0) {
-					if (prontos.size() != 0) {
-						insereFIFO_RR(prontos);
-					}					
+					if (ready_queue.size() != 0) {
+						insereFIFO_RR(ready_queue);
+					}
 				}
+				
 				Sleep(1000);
 				cout << "\nFILA DE APTOS: ";
-				imprimeListas(prontos);
+				imprimeListas(ready_queue);
 				cout << endl << endl;
+				cout << endl << "QUANTUM: " << tempo << endl;
 				cout << "CORES: ";
 				imprimeListas(cpu->cores);
 				cout << endl << endl;
@@ -231,35 +240,6 @@ public:
 				tempo--;
 			}
 		}
-	}
-	void escalonaFIFO() {
-		insereFIFO_RR(prontos);
-		int cont = 0;
-		while (cpu->cores.size()>0) {
-			cout << "\nT" << cont << endl;
-			cont++;
-			// Esse metodo faz a inclusão e exclusão durante o periodo da execução
-			executaFIFO();
-			Sleep(1000);
-			cout << "\nFILA DE APTOS: ";
-			imprimeListas(prontos);
-			cout << endl << endl;
-			cout << "CORES: ";
-			imprimeListas(cpu->cores);
-			cout << endl << endl;
-			cout << "FINALIZADOS: ";
-			imprimeListas(finalizados);
-			cout << endl << endl;
-			
-		}	
-	}
-
-	// Primeiro que entra é o primeiro que sai
-	void FIFO() {
-		escalonaFIFO();
-	}
-	void RoundRobin() {
-		escalonaRR();
 
 	}
 	void SJF() {

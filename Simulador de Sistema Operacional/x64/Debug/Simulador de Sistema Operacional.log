@@ -1,12 +1,11 @@
-﻿  CPU.cpp
-  Escalonador.cpp
-C:\Users\julia\source\repos\Simulador de Sistema Operacional\Simulador de Sistema Operacional\Escalonador.h(111,1): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
-C:\Users\julia\source\repos\Simulador de Sistema Operacional\Simulador de Sistema Operacional\Escalonador.h(117,1): warning C4267: '=': conversão de 'size_t' para 'int', possível perda de dados
+﻿  Escalonador.cpp
+C:\Users\julia\source\repos\Simulador de Sistema Operacional\Simulador de Sistema Operacional\Escalonador.h(104,1): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+C:\Users\julia\source\repos\Simulador de Sistema Operacional\Simulador de Sistema Operacional\Escalonador.h(110,1): warning C4267: '=': conversão de 'size_t' para 'int', possível perda de dados
   Kernel.cpp
-C:\Users\julia\source\repos\Simulador de Sistema Operacional\Simulador de Sistema Operacional\Escalonador.h(111,1): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
-C:\Users\julia\source\repos\Simulador de Sistema Operacional\Simulador de Sistema Operacional\Escalonador.h(117,1): warning C4267: '=': conversão de 'size_t' para 'int', possível perda de dados
+C:\Users\julia\source\repos\Simulador de Sistema Operacional\Simulador de Sistema Operacional\Escalonador.h(104,1): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+C:\Users\julia\source\repos\Simulador de Sistema Operacional\Simulador de Sistema Operacional\Escalonador.h(110,1): warning C4267: '=': conversão de 'size_t' para 'int', possível perda de dados
   Simulador de Sistema Operacional.cpp
-C:\Users\julia\source\repos\Simulador de Sistema Operacional\Simulador de Sistema Operacional\Escalonador.h(111,1): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
-C:\Users\julia\source\repos\Simulador de Sistema Operacional\Simulador de Sistema Operacional\Escalonador.h(117,1): warning C4267: '=': conversão de 'size_t' para 'int', possível perda de dados
+C:\Users\julia\source\repos\Simulador de Sistema Operacional\Simulador de Sistema Operacional\Escalonador.h(104,1): warning C4267: 'inicializando': conversão de 'size_t' para 'int', possível perda de dados
+C:\Users\julia\source\repos\Simulador de Sistema Operacional\Simulador de Sistema Operacional\Escalonador.h(110,1): warning C4267: '=': conversão de 'size_t' para 'int', possível perda de dados
   Gerando Código...
   Simulador de Sistema Operacional.vcxproj -> C:\Users\julia\source\repos\Simulador de Sistema Operacional\x64\Debug\Simulador de Sistema Operacional.exe

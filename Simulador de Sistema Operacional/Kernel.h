@@ -11,7 +11,7 @@ private:
 	CPU* cpu;
 	int quantidade_processos;
 	list <Processo> process_control_table;
-	Escalonador* escalonador;
+	Scheduler* scheduler;
 	int tipoEscalonador;
 	int numeroCores;
 	int quantum;
@@ -21,7 +21,7 @@ public:
 	Kernel(int numero_cores, int quantidade_processos, int tipoEscalonador, int quantum) {
 		this->cpu = new CPU();
 		this->quantidade_processos = quantidade_processos;
-		escalonador = new Escalonador(quantum);
+		scheduler = new Scheduler(quantum);
 		this->tipoEscalonador = tipoEscalonador;
 		numeroCores = numero_cores;
 		this->quantum = quantum;
@@ -31,14 +31,14 @@ public:
 		this->cpu = new CPU();
 		this->quantidade_processos = 0;
 		process_control_table = list<Processo>();
-		escalonador = new Escalonador(quantum);
+		scheduler = new Scheduler(quantum);
 		quantidade_processos = 0;
 		tipoEscalonador = 0;
 	}
 	Kernel() {
 		this->cpu = new CPU();
 		this->quantidade_processos = 0;
-		escalonador = new Escalonador(0);
+		scheduler = new Scheduler(0);
 		quantidade_processos = 0;
 		tipoEscalonador = 0;
 		numeroCores = 0;
@@ -46,8 +46,8 @@ public:
 	
 	void run() {	
 			//Sleep(1000);
-			escalonador = new Escalonador(process_control_table,tipoEscalonador, cpu,numeroCores, quantum);
-			escalonador->run();	
+			scheduler = new Scheduler(process_control_table,tipoEscalonador, cpu,numeroCores, quantum);
+			scheduler->run();
 	}
 	void criadorDeProcessos() {
 		int i = 0;
@@ -76,7 +76,7 @@ public:
 	}
 	void kill_process() {
 		process_control_table.clear();
-		delete(escalonador);
+		delete(scheduler);
 	}
 
 
