@@ -33,20 +33,23 @@ public:
 		process_control_table = list<Processo>();
 		scheduler = new Scheduler(quantum);
 		quantidade_processos = 0;
+		this->quantum = quantum;
 		tipoEscalonador = 0;
 	}
 	Kernel() {
 		this->cpu = new CPU();
 		this->quantidade_processos = 0;
 		scheduler = new Scheduler(0);
-		quantidade_processos = 0;
+		//quantidade_processos = 0;
 		tipoEscalonador = 0;
+		quantum = 0;
 		numeroCores = 0;
 	}
 	
 	void run() {	
 			//Sleep(1000);
 			scheduler = new Scheduler(process_control_table,tipoEscalonador, cpu,numeroCores, quantum);
+			
 			scheduler->run();
 	}
 	void criadorDeProcessos() {
@@ -74,9 +77,14 @@ public:
 		Processo* randomico = new Processo(id, tempoT, "Pronto");
 		return randomico;
 	}
+
 	void kill_process() {
 		process_control_table.clear();
 		delete(scheduler);
+	}
+	MemoryBlock* memory_allocation(int bytes) {
+		// chama o malloc
+
 	}
 
 

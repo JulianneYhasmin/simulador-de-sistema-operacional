@@ -3,6 +3,8 @@
 #include "CPU.h"
 #include "Processo.h"
 #include <thread>
+#include <list>
+#include <iostream>
 #include <windows.h>
 //run) crie uma tarefa que faça a execução do tipo de escalonador
 // tred que decrementa o tempo
@@ -32,7 +34,6 @@ private:
 	int numeroCores;
 
 public:
-	
 	Scheduler(list <Processo> tabelaProcessos, int tipoEsc, CPU *cores,int numeroCores,int quantum) {
 		this->cpu = cores;
 		insert_process(tabelaProcessos);
@@ -50,7 +51,7 @@ public:
 	}
 
 
-
+	// Insere processos na fila de aptos
 	void insert_process(list <Processo> lista) {
 		list<Processo>::iterator it = lista.begin();
 		Processo *p = new Processo();

@@ -54,6 +54,7 @@ public:
         k->criadorDeProcessos();
         k->imprimeTabelaProcessos();
         k->run();
+
         //thread runKernel(Escalonador::run);
         //runKernel.join();
         k->kill_process();

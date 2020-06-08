@@ -9,8 +9,11 @@ using namespace std;
 int main()
 {
     Simulador* s = new Simulador();
+    //thread simulador(s->menu);
+
     // Criador de processos randomicos
     s->menu();
+    //simulador.join();
     return 0;
 }
 
